@@ -6,7 +6,7 @@ if (NOT DEFINED ENV{PICO_SDK_PATH})
 endif()
 
 include(pico_sdk_import.cmake)
-project(SandboxedProject C CXX ASM)
+project(MoonlitCalc C CXX ASM)
 
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 23)
@@ -14,8 +14,22 @@ set(CMAKE_CXX_STANDARD 23)
 pico_sdk_init()
 
 add_executable(${PROJECT_NAME}
-	src/Main.cpp
-	src/Util/GPIO.cpp
+	Src/Main.cpp
+	Src/Util/Data.cpp
+	Src/Util/Keys.cpp
+)
+
+add_library(LCD STATIC
+	Lib/LCD/lcd1602_i2c.c
+)
+
+target_include_directories(LCD PUBLIC
+	Lib/LCD
+)
+
+target_link_libraries(LCD PUBLIC
+	pico_stdlib
+	hardware_i2c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -31,4 +45,5 @@ target_link_libraries(${PROJECT_NAME}
 	pico_stdlib
 	pico_multicore
 	hardware_i2c
+	LCD
 )
